@@ -1,0 +1,16 @@
+version: '3.6'
+
+services:
+    node:
+        build:
+            context: .
+        environment:
+            PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+        tty: true
+        working_dir: /app
+        privileged: true
+        volumes:
+            - .:/app
+            - ~/.npm:/home/node/.npm
+        ports:
+          - '3000:3000'
