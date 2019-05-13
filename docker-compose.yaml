@@ -13,4 +13,4 @@ services:
             - .:/app
             - ~/.npm:/home/node/.npm
         ports:
-          - '3000:3000'
+          - '1337:1337'

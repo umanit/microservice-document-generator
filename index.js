@@ -3,6 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const generator = require('./generator');
 
+const PORT = process.env.PORT || 1337;
+
 const server = http.createServer(async (req, res) => {
   if ('post' !== req.method.toLowerCase()) {
     res.writeHead(500);
@@ -61,4 +63,6 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-server.listen(3000);
+console.log('Server listening on port ' + PORT + '...');
+
+server.listen(PORT);
