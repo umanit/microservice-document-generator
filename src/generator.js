@@ -1,9 +1,11 @@
-const generator = require('puppeteer');
+import puppeteer from 'puppeteer-core';
 
-module.exports = (urlOrHtml, type, scenario) => (async () => {
-  const browser = await generator.launch({
+const CHROMIUM_PATH = process.env.CHROMIUM_PATH;
+
+export default (urlOrHtml, type, scenario) => (async () => {
+  const browser = await puppeteer.launch({
     headless: true,
-    executablePath: '/usr/bin/chromium-browser',
+    executablePath: CHROMIUM_PATH,
     args: ['--disable-dev-shm-usage'],
   });
   const page = await browser.newPage();

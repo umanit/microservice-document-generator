@@ -5,7 +5,7 @@ services:
         build:
             context: .
         environment:
-            PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+            CHROMIUM_PATH: '/usr/bin/chromium-browser'
         tty: true
         working_dir: /app
         privileged: true

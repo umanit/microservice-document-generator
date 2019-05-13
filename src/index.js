@@ -1,7 +1,14 @@
-const http = require('http');
-const path = require('path');
-const fs = require('fs');
-const generator = require('./generator');
+import '@babel/polyfill';
+
+import http from 'http';
+import path from 'path';
+import fs from 'fs';
+
+import generator from './generator';
+
+if (!process.env.CHROMIUM_PATH) {
+  throw new Error('The env variable CHROMIUM_PATH is required.');
+}
 
 const PORT = process.env.PORT || 1337;
 

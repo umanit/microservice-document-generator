@@ -4,10 +4,16 @@
   "description": "A micro service which allows to generate png or PDF file from an URL or a HTML string.",
   "main": "index.js",
   "dependencies": {
-    "puppeteer": "^1.15.0"
+    "puppeteer-core": "^1.15.0",
+    "@babel/polyfill": "^7.4.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4"
+  },
   "scripts": {
+    "build": "babel src -d lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
