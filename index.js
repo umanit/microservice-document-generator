@@ -1,4 +1,6 @@
 const http = require('http');
+const path = require('path');
+const fs = require('fs');
 const generator = require('./generator');
 
 const server = http.createServer(async (req, res) => {
@@ -17,7 +19,7 @@ const server = http.createServer(async (req, res) => {
 
   req.on('end', async () => {
     try {
-      const {url, html, type, ...params} = JSON.parse(body);
+      const {url, html, type, scenario} = JSON.parse(body);
 
       if (!type) {
         throw new Error('The parameter "type" is required.');
@@ -31,7 +33,23 @@ const server = http.createServer(async (req, res) => {
         throw new Error('Either "url" or "html" must be passed, not both.');
       }
 
-      const buffer = await generator(url || html, type);
+      let scenarioCallback;
+
+      // check scenario existence if passed
+      if (scenario) {
+        const filePath = path.join(__dirname, 'scenarios', scenario.trim() + '.js');
+
+        try {
+          await fs.promises.access(filePath);
+
+          scenarioCallback = require(filePath);
+        } catch (e) {
+          // silent the error if the scenario does not exists
+          console.error(e.message);
+        }
+      }
+
+      const buffer = await generator(url || html, type, scenarioCallback);
       const contentType = 'png' === type ? 'image/png' : 'application/pdf';
 
       res.writeHead(200, {'Content-Type': contentType});

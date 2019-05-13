@@ -1,6 +1,6 @@
 const generator = require('puppeteer');
 
-module.exports = (urlOrHtml, type) => (async () => {
+module.exports = (urlOrHtml, type, scenario) => (async () => {
   const browser = await generator.launch({
     headless: true,
     executablePath: '/usr/bin/chromium-browser',
@@ -15,10 +15,9 @@ module.exports = (urlOrHtml, type) => (async () => {
     await page.goto(urlOrHtml, {waitUntil: 'networkidle0'});
   }
 
-  // const checkboxSelector = 'label[for="confirmLegals"]';
-  // await page.waitFor(checkboxSelector);
-  // await page.click(checkboxSelector);
-  // await page.waitFor(300);
+  if ('function' === typeof scenario) {
+    await scenario(page);
+  }
 
   let buffer;
 
