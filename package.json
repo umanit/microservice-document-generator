@@ -1,5 +1,26 @@
 {
+  "name": "generator-service",
+  "version": "1.0.0",
+  "description": "A micro service which allows to generate png or PDF file from an URL or a HTML string.",
+  "main": "index.js",
   "dependencies": {
     "puppeteer": "^1.15.0"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://gitea@satanas.djlechuck.fr:2201/DjLeChuck/pdf-generator-service.git"
+  },
+  "keywords": [
+    "pdf",
+    "html",
+    "generator",
+    "puppeteer",
+    "nodejs"
+  ],
+  "author": "DjLeChuck <djlechuck@gmail.com>",
+  "license": "MIT"
 }
