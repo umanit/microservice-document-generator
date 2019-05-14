@@ -1,7 +1,7 @@
 {
-  "name": "generator-service",
+  "name": "microservice-document-generator",
   "version": "1.0.0",
-  "description": "A micro service which allows to generate png or PDF file from an URL or a HTML string.",
+  "description": "Microservice document generator is a NodeJS microservice which allows to generate png or PDF file from an URL or a HTML string using Puppeteer.",
   "main": "index.js",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
@@ -15,13 +15,14 @@
     "nodemon": "^1.19.0"
   },
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
+    "start": "node lib/index.js",
+    "start-dev": "nodemon --exec babel-node src/index.js",
     "build": "babel src -d lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "ssh://gitea@satanas.djlechuck.fr:2201/DjLeChuck/pdf-generator-service.git"
+    "url": "git@github.com:umanit/microservice-document-generator.git"
   },
   "keywords": [
     "pdf",
@@ -30,6 +31,6 @@
     "puppeteer",
     "nodejs"
   ],
-  "author": "DjLeChuck <djlechuck@gmail.com>",
+  "author": "Vivien De Bona <vdebona@umanit.fr>",
   "license": "MIT"
 }
