@@ -26,7 +26,7 @@ install a local binary.
 
     ```bash
     # npm
-    npm run start
+    npm start
 
     # yarn
     yarn start
@@ -34,7 +34,7 @@ install a local binary.
 
 ## Usage
 
-The microservice expose only one endpoint and it should be call with a POST method and parameters are passed as a
+The microservice exposes only one endpoint and it should be call with a POST method and parameters are passed as a
 JSON body.
 
 ```bash
