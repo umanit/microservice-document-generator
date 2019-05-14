@@ -2,7 +2,7 @@
   "name": "microservice-document-generator",
   "version": "1.0.0",
   "description": "Microservice document generator is a NodeJS microservice which allows to generate png or PDF file from an URL or a HTML string using Puppeteer.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "puppeteer-core": "^1.15.0"
@@ -31,6 +31,13 @@
     "puppeteer",
     "nodejs"
   ],
+  "files": [
+    "lib"
+  ],
   "author": "Vivien De Bona <vdebona@umanit.fr>",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/umanit/microservice-document-generator/issues"
+  },
+  "homepage": "https://github.com/umanit/microservice-document-generator#readme"
 }
