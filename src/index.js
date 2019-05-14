@@ -53,8 +53,7 @@ const server = http.createServer(async (req, res) => {
 
           scenarioCallback = require(filePath);
         } catch (e) {
-          // silent the error if the scenario does not exists
-          console.error(e.message);
+          throw new Error('Unknown scenario.');
         }
       }
 
