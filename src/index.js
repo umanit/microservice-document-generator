@@ -3,6 +3,7 @@ import '@babel/polyfill';
 import http from 'http';
 import path from 'path';
 import fs from 'fs';
+import pathIsInside from 'path-is-inside';
 
 import generator from './generator';
 
@@ -49,6 +50,10 @@ const server = http.createServer(async (req, res) => {
         const filePath = path.join(__dirname, 'scenarios', scenario.trim() + '.js');
 
         try {
+          if (!pathIsInside(filePath, path.join(__dirname, 'scenarios'))) {
+            throw new Error('Unknown scenario.');
+          }
+
           await fs.promises.access(filePath);
 
           scenarioCallback = require(filePath);
