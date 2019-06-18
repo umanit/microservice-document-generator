@@ -13,4 +13,5 @@ services:
             - .:/app
             - ~/.npm:/home/node/.npm
         ports:
-          - '1337:1337'
+            - '1337:1337'
+        network_mode: host
