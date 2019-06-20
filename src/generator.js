@@ -11,7 +11,7 @@ class Generator {
    * Generate the document from an URL.
    *
    * @param {String} url Url to load.
-   * @param {String} type Type of document to render (png / pdf)
+   * @param {String} type Type of document to render (png / pdf).
    * @param {CallableFunction} scenario Scenario to play before rendering the document.
    * @returns {Promise<*>}
    */
@@ -30,7 +30,7 @@ class Generator {
    *
    * @param {String} html The HTML code to use. It can be encoded in base64, cf. "decode" argument.
    * @param {Boolean} decode Should the HTML be base64 decoded?
-   * @param {String} type Type of document to render (png / pdf)
+   * @param {String} type Type of document to render (png / pdf).
    * @param {CallableFunction} scenario Scenario to play before rendering the document.
    * @returns {Promise<*>}
    */
@@ -66,9 +66,9 @@ class Generator {
   /**
    * Process the document generation.
    *
-   * @param page
-   * @param type
-   * @param scenario
+   * @param {Puppeteer.Page} page Puppeteer page used to generate the document.
+   * @param {String} type Type of document to render (png / pdf).
+   * @param {CallableFunction} scenario Scenario to play before rendering the document.
    * @returns {Promise<*>}
    * @private
    */
