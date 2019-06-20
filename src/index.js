@@ -34,7 +34,7 @@ const server = http.createServer(async (req, res) => {
       }
 
       if ('png' !== type && 'pdf' !== type) {
-        throw new Error('Invalid type "' + type + '", must be "png" or "pdf".');
+        throw new Error(`Invalid type "${type}", must be "png" or "pdf".`);
       }
 
       if ((!url && !html) || (url && html)) {
@@ -49,7 +49,7 @@ const server = http.createServer(async (req, res) => {
 
       // check scenario existence if passed
       if (scenario) {
-        const filePath = path.join(__dirname, 'scenarios', scenario.trim() + '.js');
+        const filePath = path.join(__dirname, 'scenarios', `${scenario.trim()}.js`);
 
         try {
           if (!pathIsInside(filePath, path.join(__dirname, 'scenarios'))) {
@@ -83,6 +83,6 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-console.log('Server listening on port ' + PORT + '...');
+console.log(`Server listening on port ${PORT}...`);
 
 server.listen(PORT);
