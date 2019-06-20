@@ -42,8 +42,8 @@ curl -X POST \
   http://127.0.0.1:1337 \
   -H 'Content-Type: application/json' \
   -d '{
-	"type": "png",
-	"url": "http://www.google.com"
+    "type": "png",
+    "url": "http://www.google.com"
 }' \
   -o google.png
 ```
@@ -52,7 +52,9 @@ curl -X POST \
 
 * `type` is used to specify the type of document to retrieve. There are two supported values : `png` and `pdf`.
 * `url` is used when the document should be generated from an existing webpage. Could not be used with `html`.
-* `html` is used when the document should be generated from a HTML string. Could not be used with `url`.
+* `html` is used when the document should be generated from a HTML string (or a base64 encoded string, see `decode`
+parameter). Could not be used with `url`.
+* (optional) `decode` is used if the given `html` should be base64 decoded before process.
 * (optional) `scenario` is used to specify the scenario to play on the page before rendering the document; See below
 for more informations.
 
