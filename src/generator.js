@@ -73,6 +73,14 @@ class Generator {
    * @private
    */
   async _process(page, type, scenario) {
+    if ('png' === type) {
+      // set a default viewport, the scenario can override it.
+      await page.setViewport({
+        width: 1024,
+        height: 768,
+      });
+    }
+
     if ('function' === typeof scenario) {
       await scenario(page);
     }
@@ -81,11 +89,6 @@ class Generator {
 
     if ('png' === type) {
       // take a screenshot
-      page.setViewport({
-        width: 1024,
-        height: 768,
-      });
-
       buffer = await page.screenshot({fullpage: true});
     } else {
       // make a PDF
