@@ -1,42 +1,101 @@
 import puppeteer from 'puppeteer-core';
 
-const CHROMIUM_PATH = process.env.CHROMIUM_PATH;
+/**
+ * Class managing document generation.
+ */
+class Generator {
+  #chromiumPath = process.env.CHROMIUM_PATH;
+  #browser;
 
-export default (urlOrHtml, type, scenario) => (async () => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath: CHROMIUM_PATH,
-    args: ['--disable-dev-shm-usage'],
-  });
-  const page = await browser.newPage();
+  /**
+   * Generate the document from an URL.
+   *
+   * @param {String} url Url to load.
+   * @param {String} type Type of document to render (png / pdf)
+   * @param {CallableFunction} scenario Scenario to play before rendering the document.
+   * @returns {Promise<*>}
+   */
+  async fromUrl(url, type, scenario) {
+    await this._getBrowser();
 
-  // "http" is not the four firth characters, so we guess it's HTML code
-  if ('http' !== urlOrHtml.charAt(0) + urlOrHtml.charAt(1) + urlOrHtml.charAt(2) + urlOrHtml.charAt(3)) {
-    await page.setContent(urlOrHtml, {waitUntil: 'networkidle0'});
-  } else {
-    await page.goto(urlOrHtml, {waitUntil: 'networkidle0'});
+    const page = await this.#browser.newPage();
+
+    await page.goto(url, {waitUntil: 'networkidle0'});
+
+    return await this._process(page, type, scenario);
   }
 
-  if ('function' === typeof scenario) {
-    await scenario(page);
+  /**
+   * Generate a document from HTML code.
+   *
+   * @param {String} html The HTML code to use. It can be encoded in base64, cf. "decode" argument.
+   * @param {Boolean} decode Should the HTML be base64 decoded?
+   * @param {String} type Type of document to render (png / pdf)
+   * @param {CallableFunction} scenario Scenario to play before rendering the document.
+   * @returns {Promise<*>}
+   */
+  async fromHtml(html, decode, type, scenario) {
+    await this._getBrowser();
+
+    const page = await this.#browser.newPage();
+
+    if (decode) {
+      const buffer = Buffer.from(html, 'base64');
+      html = buffer.toString();
+    }
+
+    await page.setContent(html, {waitUntil: 'networkidle0'});
+
+    return await this._process(page, type, scenario);
   }
 
-  let buffer;
-
-  if ('png' === type) {
-    // take a screenshot
-    page.setViewport({
-      width: 1024,
-      height: 768,
+  /**
+   * Launch the puppeteer browser.
+   *
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _getBrowser() {
+    this.#browser = await puppeteer.launch({
+      headless: true,
+      executablePath: this.#chromiumPath,
+      args: ['--disable-dev-shm-usage'],
     });
-
-    buffer = await page.screenshot({fullpage: true});
-  } else {
-    // make a PDF
-    buffer = await page.pdf({format: 'A4'});
   }
 
-  await browser.close();
+  /**
+   * Process the document generation.
+   *
+   * @param page
+   * @param type
+   * @param scenario
+   * @returns {Promise<*>}
+   * @private
+   */
+  async _process(page, type, scenario) {
+    if ('function' === typeof scenario) {
+      await scenario(page);
+    }
 
-  return buffer;
-})();
+    let buffer;
+
+    if ('png' === type) {
+      // take a screenshot
+      page.setViewport({
+        width: 1024,
+        height: 768,
+      });
+
+      buffer = await page.screenshot({fullpage: true});
+    } else {
+      // make a PDF
+      buffer = await page.pdf({format: 'A4'});
+    }
+
+    await this.#browser.close();
+
+    return buffer;
+  }
+}
+
+export default new Generator();

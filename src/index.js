@@ -29,7 +29,7 @@ const server = http.createServer(async (req, res) => {
 
   req.on('end', async () => {
     try {
-      const {url, html, type, scenario} = JSON.parse(body);
+      const {url, html, type, scenario, decode} = JSON.parse(body);
 
       if (!type) {
         throw new Error('The parameter "type" is required.');
@@ -41,6 +41,10 @@ const server = http.createServer(async (req, res) => {
 
       if ((!url && !html) || (url && html)) {
         throw new Error('Either "url" or "html" must be passed, not both.');
+      }
+
+      if (url && decode) {
+        throw new Error('"decode" can only occured with "html" parameter.');
       }
 
       let scenarioCallback;
@@ -62,7 +66,14 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
-      const buffer = await generator(url || html, type, scenarioCallback);
+      let buffer;
+
+      if (html) {
+        buffer = await generator.fromHtml(html, decode, type, scenarioCallback);
+      } else {
+        buffer = await generator.fromUrl(url, type, scenarioCallback)
+      }
+
       const contentType = 'png' === type ? 'image/png' : 'application/pdf';
 
       res.writeHead(200, {'Content-Type': contentType});
