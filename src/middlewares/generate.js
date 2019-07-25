@@ -1,6 +1,6 @@
-import path from "path";
+import path from 'path';
 import pathIsInside from 'path-is-inside';
-import fs from "fs";
+import fs from 'fs';
 import generator from '../generator';
 
 module.exports = async (req, res, next) => {
