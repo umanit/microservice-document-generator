@@ -76,7 +76,33 @@ module.exports = async page => {
 };
 ```
 
+## Middlewares
+
+Middlewares are used to modify the request and/or the response before the generation processing. The operation of
+middleware is the same as on most frameworks: functions that have access to the request object (`req`), the response
+object (`res`), and the `next` function in the application's request-response cycle.
+
+Express documentation is a good source of explanation: https://expressjs.com/en/guide/writing-middleware.html
+
+You can write your own middlewares as for scenarios by creating them in the `middlewares/custom` directory.
+
+Here is an example of middleware used to catch errors:
+
+```js
+module.exports = async (err, req, res, next) => {
+  if ('development' === process.env.NODE_ENV) {
+    console.error(err);
+  }
+
+  res.writeHead(500);
+  res.end(err.message);
+
+  next();
+};
+```
+
 ## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
