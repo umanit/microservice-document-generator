@@ -1,11 +1,10 @@
 import '@babel/polyfill';
 
 import http from 'http';
-import path from 'path';
-import fs from 'fs';
-import pathIsInside from 'path-is-inside';
-
-import generator from './generator';
+import connect from 'connect';
+import checkMethod from './middlewares/check-method';
+import generate from './middlewares/generate';
+import errorHandling from './middlewares/error-handling';
 
 if (!process.env.CHROMIUM_PATH) {
   throw new Error('The env variable CHROMIUM_PATH is required.');
@@ -13,75 +12,13 @@ if (!process.env.CHROMIUM_PATH) {
 
 const PORT = process.env.PORT || 1337;
 
-const server = http.createServer(async (req, res) => {
-  if ('post' !== req.method.toLowerCase()) {
-    res.writeHead(500);
-    res.end('Bad method');
+const app = connect();
 
-    return;
-  }
+app.use(checkMethod);
+app.use(generate);
+app.use(errorHandling);
 
-  let body = '';
-
-  req.on('data', chunk => body += chunk);
-
-  req.on('end', async () => {
-    try {
-      const {url, html, type, scenario, decode} = JSON.parse(body);
-
-      if (!type) {
-        throw new Error('The parameter "type" is required.');
-      }
-
-      if ('png' !== type && 'pdf' !== type) {
-        throw new Error(`Invalid type "${type}", must be "png" or "pdf".`);
-      }
-
-      if ((!url && !html) || (url && html)) {
-        throw new Error('Either "url" or "html" must be passed, not both.');
-      }
-
-      if (url && decode) {
-        throw new Error('"decode" can only occured with "html" parameter.');
-      }
-
-      let scenarioCallback;
-
-      // check scenario existence if passed
-      if (scenario) {
-        const filePath = path.join(__dirname, 'scenarios', `${scenario.trim()}.js`);
-
-        try {
-          if (!pathIsInside(filePath, path.join(__dirname, 'scenarios'))) {
-            throw new Error('Unknown scenario.');
-          }
-
-          await fs.promises.access(filePath);
-
-          scenarioCallback = require(filePath);
-        } catch (e) {
-          throw new Error('Unknown scenario.');
-        }
-      }
-
-      let buffer;
-
-      if (html) {
-        buffer = await generator.fromHtml(html, decode, type, scenarioCallback);
-      } else {
-        buffer = await generator.fromUrl(url, type, scenarioCallback)
-      }
-
-      const contentType = 'png' === type ? 'image/png' : 'application/pdf';
-
-      res.writeHead(200, {'Content-Type': contentType});
-      res.end(buffer);
-    } catch (e) {
-      res.writeHead(500);
-      res.end(e.message);
-    }
-  });
-});
+const server = http.createServer(app);
 
 console.log(`Server listening on port ${PORT}...`);
 
