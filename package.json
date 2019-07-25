@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
+    "connect": "^3.7.0",
     "path-is-inside": "^1.0.2",
     "puppeteer-core": "^1.15.0"
   },
