@@ -55,6 +55,8 @@ curl -X POST \
 * `html` is used when the document should be generated from a HTML string (or a base64 encoded string, see `decode`
 parameter). Could not be used with `url`.
 * (optional) `decode` is used if the given `html` should be base64 decoded before process.
+* (optional) `pageOptions` options passed to `page.screenshot()` (for `png` type) or `page.pdf()` (for `pdf` type).
+Please refer to the official documentation for more informations: https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md
 * (optional) `scenario` is used to specify the scenario to play on the page before rendering the document; See below
 for more informations.
 

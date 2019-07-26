@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
 
   req.on('end', async () => {
     try {
-      const { url, html, type, scenario, decode } = JSON.parse(body);
+      const { url, html, type, scenario, decode, pageOptions } = JSON.parse(body);
 
       if (!type) {
         throw new Error('The parameter "type" is required.');
@@ -50,9 +50,9 @@ module.exports = async (req, res, next) => {
       let buffer;
 
       if (html) {
-        buffer = await generator.fromHtml(html, decode, type, scenarioCallback);
+        buffer = await generator.fromHtml(html, decode, type, pageOptions, scenarioCallback);
       } else {
-        buffer = await generator.fromUrl(url, type, scenarioCallback)
+        buffer = await generator.fromUrl(url, type, pageOptions, scenarioCallback)
       }
 
       const contentType = 'png' === type ? 'image/png' : 'application/pdf';

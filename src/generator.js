@@ -12,17 +12,18 @@ class Generator {
    *
    * @param {String} url Url to load.
    * @param {String} type Type of document to render (png / pdf).
+   * @param {Object} pageOptions Options passed to page.screenshot() or page.pdf().
    * @param {CallableFunction} scenario Scenario to play before rendering the document.
    * @returns {Promise<*>}
    */
-  async fromUrl(url, type, scenario) {
+  async fromUrl(url, type, pageOptions, scenario) {
     await this._getBrowser();
 
     const page = await this.#browser.newPage();
 
-    await page.goto(url, {waitUntil: 'networkidle0'});
+    await page.goto(url, { waitUntil: 'networkidle0' });
 
-    return await this._process(page, type, scenario);
+    return await this._process(page, type, pageOptions, scenario);
   }
 
   /**
@@ -31,10 +32,11 @@ class Generator {
    * @param {String} html The HTML code to use. It can be encoded in base64, cf. "decode" argument.
    * @param {Boolean} decode Should the HTML be base64 decoded?
    * @param {String} type Type of document to render (png / pdf).
+   * @param {Object} pageOptions Options passed to page.screenshot() or page.pdf().
    * @param {CallableFunction} scenario Scenario to play before rendering the document.
    * @returns {Promise<*>}
    */
-  async fromHtml(html, decode, type, scenario) {
+  async fromHtml(html, decode, type, pageOptions, scenario) {
     await this._getBrowser();
 
     const page = await this.#browser.newPage();
@@ -44,9 +46,9 @@ class Generator {
       html = buffer.toString();
     }
 
-    await page.setContent(html, {waitUntil: 'networkidle0'});
+    await page.setContent(html, { waitUntil: 'networkidle0' });
 
-    return await this._process(page, type, scenario);
+    return await this._process(page, type, pageOptions, scenario);
   }
 
   /**
@@ -68,11 +70,12 @@ class Generator {
    *
    * @param {Puppeteer.Page} page Puppeteer page used to generate the document.
    * @param {String} type Type of document to render (png / pdf).
+   * @param {Object} pageOptions Options passed to page.screenshot() or page.pdf().
    * @param {CallableFunction} scenario Scenario to play before rendering the document.
    * @returns {Promise<*>}
    * @private
    */
-  async _process(page, type, scenario) {
+  async _process(page, type, pageOptions, scenario) {
     if ('png' === type) {
       // set a default viewport, the scenario can override it.
       await page.setViewport({
@@ -89,10 +92,12 @@ class Generator {
 
     if ('png' === type) {
       // take a screenshot
-      buffer = await page.screenshot({fullpage: true});
+      const options = Object.assign({}, { fullPage: true }, pageOptions);
+      buffer = await page.screenshot(options);
     } else {
       // make a PDF
-      buffer = await page.pdf({format: 'A4'});
+      const options = Object.assign({}, { format: 'A4' }, pageOptions);
+      buffer = await page.pdf(options);
     }
 
     await this.#browser.close();
