@@ -1,11 +1,31 @@
 import puppeteer from 'puppeteer-core';
+import { Cluster } from 'puppeteer-cluster';
 
 /**
  * Class managing document generation.
  */
 class Generator {
   #chromiumPath = process.env.CHROMIUM_PATH;
-  #browser;
+  #cluster;
+
+  /**
+   * Init the cluster of Puppeteer.
+   *
+   * @returns {Promise<void>}
+   */
+  async initCluster() {
+    this.#cluster = await Cluster.launch({
+      concurrency: Cluster.CONCURRENCY_BROWSER,
+      maxConcurrency: process.env.MAX_CONCURRENCY || 2,
+      monitor: process.env.MONITOR_CLUSTER || false,
+      puppeteer,
+      puppeteerOptions: {
+        headless: true,
+        executablePath: this.#chromiumPath,
+        args: ['--disable-dev-shm-usage'],
+      },
+    });
+  }
 
   /**
    * Generate the document from an URL.
@@ -17,13 +37,16 @@ class Generator {
    * @returns {Promise<*>}
    */
   async fromUrl(url, type, pageOptions, scenario) {
-    await this._getBrowser();
+    return await this.#cluster.execute({
+      url,
+      type,
+      pageOptions,
+      scenario
+    }, async ({ page, data: { url, type, pageOptions, scenario } }) => {
+      await page.goto(url, { waitUntil: 'networkidle0' });
 
-    const page = await this.#browser.newPage();
-
-    await page.goto(url, { waitUntil: 'networkidle0' });
-
-    return await this._process(page, type, pageOptions, scenario);
+      return await Generator._process(page, type, pageOptions, scenario);
+    });
   }
 
   /**
@@ -37,31 +60,20 @@ class Generator {
    * @returns {Promise<*>}
    */
   async fromHtml(html, decode, type, pageOptions, scenario) {
-    await this._getBrowser();
-
-    const page = await this.#browser.newPage();
-
     if (decode) {
       const buffer = Buffer.from(html, 'base64');
       html = buffer.toString();
     }
 
-    await page.setContent(html, { waitUntil: 'networkidle0' });
+    return await this.#cluster.execute({
+      html,
+      type,
+      pageOptions,
+      scenario
+    }, async ({ page, data: { html, type, pageOptions, scenario } }) => {
+      await page.setContent(html, { waitUntil: 'networkidle0' });
 
-    return await this._process(page, type, pageOptions, scenario);
-  }
-
-  /**
-   * Launch the puppeteer browser.
-   *
-   * @returns {Promise<void>}
-   * @private
-   */
-  async _getBrowser() {
-    this.#browser = await puppeteer.launch({
-      headless: true,
-      executablePath: this.#chromiumPath,
-      args: ['--disable-dev-shm-usage'],
+      return await Generator._process(page, type, pageOptions, scenario);
     });
   }
 
@@ -75,9 +87,9 @@ class Generator {
    * @returns {Promise<*>}
    * @private
    */
-  async _process(page, type, pageOptions, scenario) {
+  static async _process(page, type, pageOptions, scenario) {
     if ('png' === type) {
-      // set a default viewport, the scenario can override it.
+      // set a default viewport for png, the scenario can override it.
       await page.setViewport({
         width: 1024,
         height: 768,
@@ -99,8 +111,6 @@ class Generator {
       const options = Object.assign({}, { format: 'A4' }, pageOptions);
       buffer = await page.pdf(options);
     }
-
-    await this.#browser.close();
 
     return buffer;
   }

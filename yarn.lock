@@ -1126,7 +1126,7 @@ debug@^3.1.0, debug@^3.2.6:
   dependencies:
     ms "^2.1.1"
 
-debug@^4.1.0:
+debug@^4.1.0, debug@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
   integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
@@ -2411,6 +2411,13 @@ pstree.remy@^1.1.6:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/pstree.remy/-/pstree.remy-1.1.7.tgz#c76963a28047ed61542dc361aa26ee55a7fa15f3"
   integrity sha512-xsMgrUwRpuGskEzBFkH8NmTimbZ5PcPup0LA8JJkHIm2IMUbQcpo3yeLNWVrufEYjh8YwtSVh0xz6UeWc5Oh5A==
+
+puppeteer-cluster@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/puppeteer-cluster/-/puppeteer-cluster-0.16.0.tgz#7c9e9dd511a8a3c39fa5cb818a7f495fb8595466"
+  integrity sha512-FxLDrHA6C3qPZHb34rXsaM79RDwFNfeTJIURKiXQ9PBPvifc1s9qujhPsnrVY8NArbpdphn9M96esegwRLSeyw==
+  dependencies:
+    debug "^4.1.1"
 
 puppeteer-core@1.15.0:
   version "1.15.0"

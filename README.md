@@ -22,6 +22,11 @@ install a local binary.
 
 1. (Optional) Define the environment variable `PORT` to specify the server port, default to `1337`.
 
+1. (Optional) Define the environment variable `MAX_CONCURRENCY` to specify maximal number of parallel workers
+(default 2).
+
+1. (Optional) Define the environment variable `MONITOR_CLUSTER` to `true` to monitor the cluster.
+
 1. Launch the server:
 
     ```bash
