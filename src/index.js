@@ -5,7 +5,9 @@ import http from 'http';
 import connect from 'connect';
 import path from 'path';
 import fs from 'fs';
-import checkMethod from './middlewares/check-method';
+import checkRequest from './middlewares/check-request';
+import decrypt from './middlewares/decrypt';
+import readBody from './middlewares/read-body';
 import generate from './middlewares/generate';
 import errorHandling from './middlewares/error-handling';
 import generator from './generator';
@@ -38,7 +40,9 @@ import generator from './generator';
   await generator.initCluster();
 
   // Load service middlewares
-  app.use(checkMethod);
+  app.use(checkRequest);
+  app.use(readBody);
+  app.use('/encrypted', decrypt);
   app.use(generate);
   app.use(errorHandling);
 
