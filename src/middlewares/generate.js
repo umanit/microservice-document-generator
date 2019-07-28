@@ -27,10 +27,10 @@ module.exports = async (req, res, next) => {
 
     // check scenario existence if passed
     if (scenario) {
-      const filePath = path.join(__dirname, 'scenarios', `${scenario.trim()}.js`);
+      const filePath = path.join(__dirname, '..', 'scenarios', `${scenario.trim()}.js`);
 
       try {
-        if (!pathIsInside(filePath, path.join(__dirname, 'scenarios'))) {
+        if (!pathIsInside(filePath, path.join(__dirname, '..', 'scenarios'))) {
           throw new Error('Unknown scenario.');
         }
 
