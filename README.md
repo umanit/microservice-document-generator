@@ -20,6 +20,9 @@ install a local binary.
 
 1. Define the environment variable `CHROMIUM_PATH` which points to the location of the Chromium/Chrome binary.
 
+1. (Optional) Define the environment variable `ENCRYPTION_KEY` to use `/encrypted` endpoint (see below); Must be 256
+bits (32 characters).
+
 1. (Optional) Define the environment variable `PORT` to specify the server port, default to `1337`.
 
 1. (Optional) Define the environment variable `MAX_CONCURRENCY` to specify maximal number of parallel workers
@@ -39,8 +42,10 @@ install a local binary.
 
 ## Usage
 
-The microservice exposes only one endpoint and it should be call with a POST method and parameters are passed as a
-JSON body.
+### Uncrypted data
+
+The microservice exposes a `/` endpoint wich expects clear data that should be call as POST method with parameters
+passed as a JSON body. The `Content-Type` must be `application/json`.
 
 ```bash
 curl -X POST \
@@ -51,6 +56,33 @@ curl -X POST \
     "url": "http://www.google.com"
 }' \
   -o google.png
+```
+
+### Crypted data
+
+The microservice exposes a `/encrypted` endpoint wich expects encrypted data that should be call as POST method
+with parameters encrypted message passed as a plain text body. The `Content-Type` must be `text/plain`.
+
+```bash
+curl -X POST \
+  http://127.0.0.1:1337/encrypted \
+  -H 'Content-Type: text/plain' \
+  -d '9db37437cd8b889f22ffa454bccbcb8a:5e62b34ab949e4533814bee6cb432fd793b94409318a510b52f9b0032e7461aa834b024cd6cbe5e2b5751f5cc15d0b49e5d74c' \
+  -o google.png
+```
+
+The message should be composed of the IV concatenated with the parameters JSON string separated with a `:`. In the
+previous example, the IV is `9db37437cd8b889f22ffa454bccbcb8a` and the encrypted message
+`5e62b34ab949e4533814bee6cb432fd793b94409318a510b52f9b0032e7461aa834b024cd6cbe5e2b5751f5cc15d0b49e5d74c`.
+
+Using the `ENCRYPTION_KEY` environment variable and the IV, the message will be decrypted and result used as
+parameters for the generation. In the previous example, the result is:
+
+```json
+{
+    "type": "png",
+    "url": "http://www.google.com"
+}
 ```
 
 ## Parameters
@@ -93,16 +125,23 @@ Express documentation is a good source of explanation: https://expressjs.com/en/
 
 You can write your own middlewares as for scenarios by creating them in the `middlewares/custom` directory.
 
-Here is an example of middleware used to catch errors:
+Here is an example of the middleware used to verify the request's method and content-type:
 
 ```js
-module.exports = async (err, req, res, next) => {
-  if ('development' === process.env.NODE_ENV) {
-    console.error(err);
+module.exports = async (req, res, next) => {
+  if ('post' !== req.method.toLowerCase()) {
+    res.writeHead(500);
+    res.end('Bad method');
+
+    return next(new Error('Bad method'));
   }
 
-  res.writeHead(500);
-  res.end(err.message);
+  if (!['application/json', 'text/plain'].includes(req.headers['content-type'])) {
+    res.writeHead(500);
+    res.end('Bad Content-Type');
+
+    return next(new Error('Bad Content-Type'));
+  }
 
   next();
 };
