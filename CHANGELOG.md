@@ -6,8 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.0] - 2020-01-28
+## 1.0.0 - 2020-01-28
 
 First release 🎉
 
-[Unreleased]: https://github.com/umanit/microservice-document-generator/compare/v1.0.0...master
+[Unreleased]: https://github.com/umanit/microservice-document-generator/compare/1.0.0...master
