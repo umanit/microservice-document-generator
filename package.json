@@ -4,12 +4,12 @@
   "description": "Microservice document generator is a NodeJS microservice which allows to generate png or PDF file from an URL or a HTML string using Puppeteer.",
   "main": "lib/index.js",
   "dependencies": {
-    "connect": "^3.7.0",
-    "core-js": "^3.1.4",
-    "path-is-inside": "^1.0.2",
-    "puppeteer-cluster": "^0.16.0",
-    "puppeteer-core": "^2.1.0",
-    "regenerator-runtime": "^0.13.3"
+    "connect": "^3.7",
+    "core-js": "^3.1",
+    "path-is-inside": "^1.0",
+    "puppeteer-cluster": "^0.21",
+    "puppeteer-core": "^11.0",
+    "regenerator-runtime": "^0.13"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -17,7 +17,7 @@
     "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
-    "nodemon": "^1.19.0"
+    "nodemon": "^2.0"
   },
   "scripts": {
     "start": "node lib/index.js",
