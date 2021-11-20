@@ -44,5 +44,9 @@
   "bugs": {
     "url": "https://github.com/umanit/microservice-document-generator/issues"
   },
-  "homepage": "https://github.com/umanit/microservice-document-generator#readme"
+  "homepage": "https://github.com/umanit/microservice-document-generator#readme",
+  "volta": {
+    "node": "16.13.0",
+    "yarn": "1.22.17"
+  }
 }
