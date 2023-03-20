@@ -6,9 +6,8 @@
   "dependencies": {
     "connect": "^3.7",
     "core-js": "^3.1",
-    "path-is-inside": "^1.0",
-    "puppeteer-cluster": "^0.21",
-    "puppeteer-core": "^11.0",
+    "puppeteer-cluster": "^0.23",
+    "puppeteer-core": "^19.7",
     "regenerator-runtime": "^0.13"
   },
   "devDependencies": {

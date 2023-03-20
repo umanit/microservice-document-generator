@@ -1,7 +1,7 @@
 import path from 'path';
-import pathIsInside from 'path-is-inside';
 import fs from 'fs';
 import generator from '../generator';
+import pathIsInside from '../tools/path-is-inside';
 
 module.exports = async (req, res, next) => {
   try {
@@ -47,7 +47,7 @@ module.exports = async (req, res, next) => {
     if (html) {
       buffer = await generator.fromHtml(html, decode, type, pageOptions, scenarioCallback);
     } else {
-      buffer = await generator.fromUrl(url, type, pageOptions, scenarioCallback)
+      buffer = await generator.fromUrl(url, type, pageOptions, scenarioCallback);
     }
 
     const contentType = 'png' === type ? 'image/png' : 'application/pdf';
