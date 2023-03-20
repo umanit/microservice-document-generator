@@ -14,9 +14,15 @@ class Generator {
    * @returns {Promise<void>}
    */
   async initCluster() {
+    let maxConcurrency = 2;
+
+    if (process.env.MAX_CONCURRENCY) {
+      maxConcurrency = parseInt(process.env.MAX_CONCURRENCY, 10);
+    }
+
     this.#cluster = await Cluster.launch({
       concurrency: Cluster.CONCURRENCY_BROWSER,
-      maxConcurrency: process.env.MAX_CONCURRENCY || 2,
+      maxConcurrency: maxConcurrency,
       monitor: process.env.MONITOR_CLUSTER || false,
       puppeteer,
       puppeteerOptions: {
@@ -41,7 +47,7 @@ class Generator {
       url,
       type,
       pageOptions,
-      scenario
+      scenario,
     }, async ({ page, data: { url, type, pageOptions, scenario } }) => {
       await page.goto(url, { waitUntil: 'networkidle0' });
 
@@ -69,7 +75,7 @@ class Generator {
       html,
       type,
       pageOptions,
-      scenario
+      scenario,
     }, async ({ page, data: { html, type, pageOptions, scenario } }) => {
       await page.setContent(html, { waitUntil: 'networkidle0' });
 
