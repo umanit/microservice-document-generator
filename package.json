@@ -46,7 +46,7 @@
   },
   "homepage": "https://github.com/umanit/microservice-document-generator#readme",
   "volta": {
-    "node": "16.13.0",
+    "node": "18.15.0",
     "yarn": "1.22.17"
   }
 }
